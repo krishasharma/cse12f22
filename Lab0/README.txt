@@ -1,0 +1,1 @@
+I, Krisha Sharma, have read and understood the Fall CSE12 syllabus and Personal Responsibility Document. krvsharm 29 September 2021

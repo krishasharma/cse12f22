@@ -1,9 +1,5 @@
+#############################################################################################################################################
 # Fall 2021 CSE12 Lab 4 Template
-######################################################
-# Macros made for you (you will need to use these)
-######################################################
-
-###########################################################################################################
 # Created by: Sharma, Krisha
 # krvsharm
 # 13 November 2021 
@@ -15,7 +11,48 @@
 #              horizontal and vertical lines on the display.. 
 # 
 # Notes: This program is intended to be run from the MARS IDE. 
-###########################################################################################################
+#############################################################################################################################################
+# Register Use 
+#
+# getPixelAddress
+#    $t0 is used to store the origin hexadecimal 
+#
+# clear_bitmap
+#    $t0 is used to store the origin hexadecimal/starting memory location to color the bitmap
+#    $t1 contains the value of the total size of the bit map, 128 * 128 = 16384
+#    $t3 stores the value 1 and is used as a counter to help keep track of how many times the function loops through 
+#
+# draw_pixel
+#    $t4 is used to store the output of 0x000000XX
+#    $t5 is used to store the output of 0x000000YY
+#    $t6 is used to store the memory address 
+#
+# get_pixel
+#    $t1 contains the x coordinate of the pixel in format 0x000000XX
+#    $t2 contains the y coordinate of the pixel in format 0x000000XX
+#    $t3 contains the pixel address using 0x000000XX and 0x000000YY in register $t1 and $t2
+#
+# draw_horizontal_line
+#    $t5 is used as a counter with the starting value of 0 
+#    $t2 is inatliized with the length/width of the bitmap 128 
+#    $t4 contains the zero for the x coordinate 
+#    $t3 contains the memory address of the x & y coordinates
+#
+# draw_vertical_line
+#    $t5 is used as a counter with the starting value of 0 
+#    $t2 is inatliized with the length/width of the bitmap 128 
+#    $t4 contains the zero for the y coordinate 
+#    $t3 contains the memory address of the x & y coordinates
+#
+# draw_crosshair
+#    $t0 is used to store the x coordinates 
+#    $t1 is used to store the y coordinates 
+#    $t3 contains the memory address converted from the pixel coordinates
+#    $t7 contains the color of the pixel after jumping to get_pixel function 
+s
+######################################################
+# Macros made for you (you will need to use these)
+######################################################
 
 # Macro that stores the value in %reg on the stack 
 #	and moves the stack pointer.
@@ -178,7 +215,7 @@ draw_horizontal_line: nop
 	push($t2)                                                  # macro that stores the value in $t2 on the stack and moves the stack pointer
 	push($t4)                                                  # macro that stores the value in $t4 on the stack and moves the stack pointer
 	push($t3)                                                  # macro that stores the value in $t3 on the stack and moves the stack pointer
-	li $t5, 0                                                  # initalizes $t5 as counter with the starting value of 0
+	li $t5, 0                                                  # initalizes $t5 as counter with the starting value of 0  
 	li $t2, 128                                                # initalizes $t2 with the length/width of the bitmap 
 	li $t4, 0x00000000                                         # zero for the x coord 
 	makehorizontal: 
@@ -186,7 +223,7 @@ draw_horizontal_line: nop
 		sw $a1, ($t3)                                      # stores the memory adress in the color register $a1 
 		addi $t5, $t5, 1                                   # i = i + 1, inital counter 
 		addi $t4, $t4, 1                                   # i = i + 1, increases the x coordinate by 1 every time 
-		beq $t5, $t2, end                                  # if the counter ($t0) is equal to the register value in $t2, branch to end, else continue 
+		beq $t5, $t2, end                                  # if the counter ($t5) is equal to the register value in $t2, branch to end, else continue 
 		j makehorizontal                                   # jumps back to the start of the makehorizontal function, acting as a for loop 
 	end: 
 		pop($t3)                                           # macro takes the value on the top of the stack and loads it into $t3 then moves the stack pointer
@@ -255,9 +292,7 @@ draw_crosshair: nop
     	
     	push($t0)                                                  # macro that stores the value in $t0 on the stack and moves the stack pointer
     	push($t1)                                                  # macro that stores the value in $t1 on the stack and moves the stack pointer
-    	push($t2)                                                  # macro that stores the value in $t2 on the stack and moves the stack pointer
     	push($t3)                                                  # macro that stores the value in $t3 on the stack and moves the stack pointer
-    	push($t4)                                                  # macro that stores the value in $t4 on the stack and moves the stack pointer
     	
     	jal get_pixel                                              # jumps to get_pixel function 
     	move $t7, $v0                                              # moves the contents of $v0 to register $t7
@@ -271,15 +306,13 @@ draw_crosshair: nop
     	jal draw_horizontal_line                                   # jumps to draw_horizontal_line function 
     	
     	formatCoordinates($a0, $t0, $t1)                           # formats the x & y coordinates into 0x00XX00YY format needed for the draw pixel function
-    	move $a1, $t7                                              # moves the contence of the register $t7 into the register $a1 which also holds the color in format (0x00RRGGBB) 
+    	move $a1, $t7                                              # moves the contents of the register $t7 into the register $a1 which also holds the color in format (0x00RRGGBB) 
     	jal draw_pixel                                             # jumps to draw_pixel function 
 
 	# HINT: at this point, $ra has changed (and you're likely stuck in an infinite loop). 
   	# Add a pop before the below jump return (and push somewhere above) to fix this.
 	
-    	pop($t4)                                                   # macro takes the value on the top of the stack and loads it into $t4 then moves the stack pointer
     	pop($t3)                                                   # macro takes the value on the top of the stack and loads it into $t3 then moves the stack pointer
-    	pop($t2)                                                   # macro takes the value on the top of the stack and loads it into $t2 then moves the stack pointer
     	pop($t1)                                                   # macro takes the value on the top of the stack and loads it into $t1 then moves the stack pointer
     	pop($t0)                                                   # macro takes the value on the top of the stack and loads it into $t0 then moves the stack pointer
 	pop($ra)                                                   # macro takes the value on the top of the stack and loads it into $ra then moves the stack pointer

@@ -5,7 +5,8 @@
 # 13 November 2021 
 # 
 # Assignment: Lab 4: Functions and Graphics 
-# CSE 12, Computer Systems and Assembly Language # UC Santa Cruz, Fall 2021 
+# CSE 12, Computer Systems and Assembly Language 
+# UC Santa Cruz, Fall 2021 
 # 
 # Description: This program will allow users to change the background color of the display, and “draw” 
 #              horizontal and vertical lines on the display.. 
@@ -49,7 +50,7 @@
 #    $t1 is used to store the y coordinates 
 #    $t3 contains the memory address converted from the pixel coordinates
 #    $t7 contains the color of the pixel after jumping to get_pixel function 
-s
+
 ######################################################
 # Macros made for you (you will need to use these)
 ######################################################
